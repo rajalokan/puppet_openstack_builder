@@ -24,6 +24,8 @@ enabled_services:
   # NOTE: if using mongodb, comment this line out so mysql is not
   # redundantly included
   - ceilometer
+  - heat
+  - heat_cfn
 
 # Hosts to be allowed access to the backend database used to
 # persist data for OpenStack services (e.g. MySQL or similar).

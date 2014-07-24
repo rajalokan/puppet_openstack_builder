@@ -5,5 +5,3 @@ classes:
   - heat::api_cloudwatch
   - heat::db::mysql
   - heat::engine
-  - heat::keystone::auth
-  - heat::keystone::auth_cfn
