@@ -23,10 +23,26 @@ monitoring: none
 build_server_name: build-server
 build_server_ip: 192.168.242.100
 
-# These are legacy mappings, and should have no effect
-controller_public_address: 10.2.3.5
-controller_internal_address: 10.3.3.5
-controller_admin_address: 10.3.3.5
+# This can be used to set a name for your public VIP
+# Set this to your certname if you're using ssl
+controller_public_address: public.stacktira.domain.name
+
+# This can be used to set a name for your internal VIP
+# Set this to your certname if you're using ssl
+controller_internal_address: private.stacktira.domain.name
+
+# This can be used to set a name for your internal VIP
+# Set this to your certname if you're using ssl
+controller_admin_address: private.stacktira.domain.name
+
+# Protocol to use to access public endpoints
+controller_public_protocol: https
+
+# Protocol to use to access internal endpoints
+controller_internal_protocol: http
+
+# Protocol to use to access internal endpoints
+controller_admin_protocol: http
 
 # Interface that will be stolen by the l3 router on
 # the control node.
@@ -57,8 +73,10 @@ control_servers_public: &control_servers_public  [ '10.2.3.10', '10.2.3.11', '10
 # List of IP addresses for controllers on the private network
 control_servers_private: &control_servers_private  [ '10.3.3.10', '10.3.3.11', '10.3.3.12']
 
-# A hash of hostnames to private network IPs. Used for rabbitmq hosts
-# resolution
+# A Hash of /etc/hosts entries. Used for rabbitmq hosts
+# resolution, and for adding names to the public and private VIPs.
+# The top three used for rabbitmq must be of the form <hostname>private
+# since Rabbit requires short names and needs a name to bind to.
 openstacklib::hosts::cluster_hash:
   control1private:
     ip: '10.3.3.10'
@@ -66,6 +84,10 @@ openstacklib::hosts::cluster_hash:
     ip: '10.3.3.11'
   control3private:
     ip: '10.3.3.12'
+  "%{hiera('controller_public_address')}":
+    ip: "%{hiera('public_vip')}"
+  "%{hiera('controller_internal_address')}":
+    ip: "%{hiera('private_vip')}"
 
 # List of controller hostnames. Used for rabbitmq hosts list
 cluster_names: &cluster_names  [ 'control1private', 'control2private', 'control3private' ]
@@ -74,6 +96,33 @@ cluster_names: &cluster_names  [ 'control1private', 'control2private', 'control3
 # force the nodename to be the private shortname we're using above.
 rabbitmq::environment_variables:
   'NODENAME': "rabbit@%{hostname}private"
+
+# Path to the SSL cert to use for the public API endpoints and dashboard
+haproxy_cert_path: /etc/ssl/certs/testing_stacktira.pem
+
+# Bind options to be passed to HAproxy if ssl is enabled. This
+# will only affect the public endpoints and dashboard.
+ssl_bind_options: &ssl_bind_options
+  - ssl
+  - crt
+  - "%{hiera('haproxy_cert_path')}"
+
+# Enable SSL on the public dashboard VIP port
+openstacklib::loadbalance::haproxy::dashboard::enable_ssl: true
+
+# A hash describing the regions and their endpoints
+openstacklib::openstack::regions::regions_hash:
+  RegionOne:
+    public_ip: "%{hiera('controller_public_address')}"
+    private_ip: "%{hiera('controller_internal_address')}"
+    services:
+      - heat
+      - nova
+      - neutron
+      - cinder
+      - glance
+      - keystone
+      - ec2
 
 #Libvirt type
 nova::compute::libvirt::libvirt_virt_type: qemu

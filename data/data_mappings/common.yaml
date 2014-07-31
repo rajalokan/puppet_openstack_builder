@@ -228,9 +228,9 @@ swift_local_net_ip:
   - heat::engine::heat_waitcondition_server_url
 "http://%{controller_internal_address}:8003":
   - heat::engine::heat_watch_server_url
-"%{controller_public_protocol}://%{controller_public_address}:5000/v2.0/":
+"%{controller_internal_protocol}://%{controller_internal_address}:5000/v2.0/":
   - keystone::public_endpoint
-"%{controller_public_protocol}://%{controller_admin_address}:35357/v2.0/":
+"%{controller_admin_protocol}://%{controller_admin_address}:35357/v2.0/":
   - keystone::admin_endpoint
 # cisco specific data
 build_node_name:

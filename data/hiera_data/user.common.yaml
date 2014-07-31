@@ -45,11 +45,20 @@ controller_public_protocol: 'http'
 # of the control node itself.
 controller_internal_address: 192.168.242.10
 
+# The protocol used to access API services on the control node on internal
+# endpoints. Currently only used for nova-neutron interaction.
+# Can be 'http' or 'https'.
+controller_internal_protocol: 'http'
+
 # The IP address used for management functions (such as monitoring)
 # on the control node.  In the compressed_ha or full_ha scenarios, this will
 # be an address to be configured as a VIP on the HAProxy
 # load balancers, not the address of the control node itself.
 controller_admin_address: 192.168.242.10
+
+# Protocol used to access admin endpoints
+# Can be 'http' or 'https'.
+controller_admin_protocol: 'http'
 
 # Controller public url
 controller_public_url: "http://192.168.242.10:5000"

@@ -134,6 +134,7 @@ def configure_openstack_node(
   setup_hostname(config, node_name)
   config.vm.provider "virtualbox" do |vconfig|
     vconfig.customize ["modifyvm", :id, "--memory", memory]
+    vconfig.cpus = 2
   end
 
   network ||= '10'
@@ -141,6 +142,14 @@ def configure_openstack_node(
 
   config.vm.synced_folder "./modules", "/etc/puppet/modules"
   config.vm.synced_folder "./", "/root/stacktira"
+
+  # Generate some certs
+  config.vm.provision :shell do |shell|
+    shell.inline  = 'if [ ! -f /etc/ssl/certs/testing_stacktira.pem ]; then ' +
+                    'openssl x509 -text -in /vagrant/contrib/aptira/build/testing_stacktira_ca.crt >> /etc/pki/tls/certs/ca-bundle.crt; ' +
+                    'cp /vagrant/contrib/aptira/build/testing_stacktira.pem /etc/ssl/certs; ' +
+                    'fi'
+  end
 
   options = ''
   if v_config['proxy']

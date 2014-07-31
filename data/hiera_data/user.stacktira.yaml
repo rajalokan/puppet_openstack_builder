@@ -103,6 +103,9 @@ horizon::wsgi::apache::bind_address: "%{ipaddress_eth2}"
 apt::proxy_host: 192.168.0.18
 apt::proxy_port: 8000
 
+#bypass python-heatclient bug https://bugs.launchpad.net/heat/+bug/1342621
+horizon::openstack_endpoint_type: internalURL
+
 # We are using the new version of puppetlabs-mysql, which
 # requires this parameter for compatibility.
 mysql_module: '2.2'
@@ -173,6 +176,10 @@ openstacklib::loadbalance::haproxy::public_iface: 'eth2'
 openstacklib::loadbalance::haproxy::private_iface: 'eth3'
 openstacklib::loadbalance::haproxy::cluster_master: 'control1.domain.name'
 
+# RedHat doesn't package a very recent version of HAProxy
+# that supports SSL termination
+openstacklib::loadbalance::haproxy::package_override: 'http://stacktira.aptira.com/files/haproxy-1.5.2-1.x86_64.rpm'
+
 # CIDRs for the three networks.
 deploy_control_firewall_source: '192.168.242.0/24'
 public_control_firewall_source: '10.2.3.0/24'
@@ -214,3 +221,19 @@ openstacklib::openstack::regions::glance_user_pw:  "%{hiera('glance_service_pass
 openstacklib::openstack::regions::heat_user_pw:  "%{hiera('heat_service_password')}"
 openstacklib::openstack::regions::cinder_user_pw: "%{hiera('cinder_service_password')}"
 openstacklib::openstack::regions::ceilometer_user_pw: "%{hiera('ceilometer_service_password')}"
+
+# Ciphers to accept when connecting to the dashboard using SSL
+openstacklib::loadbalance::haproxy::dashboard::ssl_ciphers:
+  - RC4-SHA
+  - AES128-SHA
+  - AES256-SHA
+
+# Needed to set up Neutron notifications to Nova
+controller_internal_url: "%{hiera('controller_internal_protocol')}://%{hiera('controller_internal_address')}"
+
+# Bind options to be passed to HAproxy if ssl is enabled. This
+# will only affect the public endpoints and dashboard.
+ssl_bind_options:
+  - ssl
+  - crt
+  - "%{hiera('haproxy_cert_path')}"

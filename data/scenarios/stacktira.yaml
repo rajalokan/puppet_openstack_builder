@@ -19,7 +19,7 @@ roles:
       - mysql::bindings
       - "nova::%{rpc_type}"
       - openstacklib::openstack::databases
-      - openstacklib::openstack::endpoints
+      - openstacklib::openstack::regions
       - openstacklib::openstack::provider
       - openstacklib::openstack::netns
       - openstacklib::openstack::auth_file

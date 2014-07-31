@@ -112,6 +112,15 @@ public_vip:
   - openstacklib::loadbalance::haproxy::nova::vip
   - openstacklib::loadbalance::haproxy::neutron::vip
 
+ssl_bind_options:
+  - openstacklib::loadbalance::haproxy::ceilometer::bind_options
+  - openstacklib::loadbalance::haproxy::cinder::bind_options
+  - openstacklib::loadbalance::haproxy::glance::bind_options
+  - openstacklib::loadbalance::haproxy::heat::bind_options
+  - openstacklib::loadbalance::haproxy::keystone::bind_options
+  - openstacklib::loadbalance::haproxy::nova::bind_options
+  - openstacklib::loadbalance::haproxy::neutron::bind_options
+
 private_vip:
   - openstacklib::loadbalance::haproxy::cluster_private_vip
   - openstacklib::loadbalance::haproxy::mysql::vip
@@ -185,11 +194,32 @@ openstack_release:
   - openstacklib::compat::nova::openstack_release
   - openstacklib::compat::keystone::openstack_release
 
-"%{private_protocol}://%{private_vip}:8774/v2":
+"%{controller_internal_protocol}://%{controller_internal_address}:8774/v2":
   - neutron::server::notifications::nova_url
 
-"%{private_protocol}://%{private_vip}:35357/v2.0/":
+"%{controller_admin_protocol}://%{controller_admin_address}:35357/v2.0/":
   - neutron::server::notifications::nova_admin_auth_url
+
+controller_public_protocol:
+  - openstacklib::openstack::regions::public_protocol
+
+controller_internal_protocol:
+  - openstacklib::openstack::regions::internal_protocol
+
+controller_admin_protocol:
+  - openstacklib::openstack::regions::admin_protocol
 
 admin_password:
   - openstacklib::openstack::auth_file::admin_password
+
+ssl_bind_options:
+  - openstacklib::loadbalance::haproxy::ceilometer::bind_options
+  - openstacklib::loadbalance::haproxy::cinder::bind_options
+  - openstacklib::loadbalance::haproxy::glance::bind_options
+  - openstacklib::loadbalance::haproxy::heat::bind_options
+  - openstacklib::loadbalance::haproxy::keystone::bind_options
+  - openstacklib::loadbalance::haproxy::nova::bind_options
+  - openstacklib::loadbalance::haproxy::neutron::bind_options
+
+haproxy_cert_path:
+  - openstacklib::loadbalance::haproxy::dashboard::cert_path
