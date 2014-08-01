@@ -9,7 +9,7 @@ network_service: neutron
 # supports linuxbridge and ovs
 network_plugin: ovs
 # supports single-flat, provider-router, and per-tenant-router
-network_type: provider-router
+network_type: per-tenant-router
 # supports gre or vlan
 tenant_network_type: gre
 password_management: individual

@@ -8,19 +8,24 @@
 # up across files. For this reason, editing the lower section
 # of this file is not recommended.
 
+#) The scenario to use.
 scenario: stacktira
 
-networking: none
-storage:    none
-monitoring: none
 # The default network config is as follows:
 # eth0: vagrant network in testing
 # eth1: deploy network
-# eth2: public api network
-# eth3: private service network + GRE
-# eth4: external data network
+# eth2: public api network + external VM traffic
+# eth3: private service network + internal VM traffic
 
+# Domain to use for fqdns and public services
+domain_name: domain.name
+
+# Name of the server for monitoring, provisioning
+# and puppet master
 build_server_name: build-server
+
+# IP of the server for monitoring, provisioning
+# and puppet master
 build_server_ip: 192.168.242.100
 
 # This can be used to set a name for your public VIP
@@ -44,27 +49,41 @@ controller_internal_protocol: http
 # Protocol to use to access internal endpoints
 controller_admin_protocol: http
 
-# Interface that will be stolen by the l3 router on
+# Interface that will be used by the l3 router on
 # the control node.
-external_interface: eth4
+external_interface: eth2
+
 # for a provider network on this interface instead of
 # an l3 agent use these options
 #openstacklib::openstack::provider::interface: eth4
 #neutron::plugins::ovs::network_vlan_ranges: default
+#network_type: provider-router
 
-# Gre tunnel address for each node
+# Gre tunnel bind address for each node
 internal_ip: "%{ipaddress_eth3}"
 
-# This is the interface that each node will be binding
-# various services on.
+# The bind ip for management and deployment services
 deploy_bind_ip: "%{ipaddress_eth1}"
+
+# The bind ip for public services
 public_bind_ip: "%{ipaddress_eth2}"
+
+# The bind ip for private services
 private_bind_ip: "%{ipaddress_eth3}"
+
+# The interface for management and deployment services
+deploy_bind_if: eth1
+
+# The interface for public services
+public_bind_if: eth2
+
+# The interface for private services
+private_bind_if: eth3
 
 # The public VIP, where all API services are exposed to users.
 public_vip: 10.2.3.5
 
-# The private VIP, where internal services are exposed to openstack services.
+# The private VIP, where internal services are exposed to other services.
 private_vip: 10.3.3.5
 
 # List of IP addresses for controllers on the public network
@@ -73,10 +92,23 @@ control_servers_public: &control_servers_public  [ '10.2.3.10', '10.2.3.11', '10
 # List of IP addresses for controllers on the private network
 control_servers_private: &control_servers_private  [ '10.3.3.10', '10.3.3.11', '10.3.3.12']
 
+# Hosts that will be permitted to access MySQL
+allowed_hosts: 10.3.3.%
+
+# The master node for clustered control services. This should
+# match the FQDN fact on the node to be designated the galera
+# and keepalived master
+control_master_fqdn: control1.domain.name
+
+# Hostname of node to use as the master node in Galera master/slave
+control_master_name: control1
+
+# Address of node to use as the master node in Galera master/slave
+control_master_address: 10.3.3.10
+
 # A Hash of /etc/hosts entries. Used for rabbitmq hosts
 # resolution, and for adding names to the public and private VIPs.
 # The top three used for rabbitmq must be of the form <hostname>private
-# since Rabbit requires short names and needs a name to bind to.
 openstacklib::hosts::cluster_hash:
   control1private:
     ip: '10.3.3.10'
@@ -124,39 +156,65 @@ openstacklib::openstack::regions::regions_hash:
       - keystone
       - ec2
 
-#Libvirt type
+# Libvirt type use 'kvm' on bare metal, qemu on VMs
 nova::compute::libvirt::libvirt_virt_type: qemu
 
-horizon::wsgi::apache::bind_address: "%{ipaddress_eth2}"
+# Proxy host to use for package downloads
+proxy_host: 192.168.0.18
 
-# Use these to set an apt proxy if running on a Debian-like
-apt::proxy_host: 192.168.0.18
-apt::proxy_port: 8000
+# Proxy port to use for package downloads
+proxy_port: 8000
 
-# CIDRs for the three networks.
+# Allow CIDR for the deploy network
 deploy_control_firewall_source: '192.168.242.0/24'
+
+# Allow CIDR for the public network
 public_control_firewall_source: '10.2.3.0/24'
+
+# Allow CIDR for the private network
 private_control_firewall_source: '10.3.3.0/24'
 
-# Proxy configuration of either apt or yum
-openstacklib::repo::apt_proxy_host: '192.168.0.18'
-openstacklib::repo::apt_proxy_port: '8000'
-openstacklib::repo::yum_http_proxy: 'http://192.168.0.18:8000'
+# Mirror to use for epel
 openstacklib::repo::yum_epel_mirror: 'http://fedora.mirror.uber.com.au/epel'
+
+# Mirror to use for base
 openstacklib::repo::yum_base_mirror: 'http://centos.mirror.uber.com.au'
 
+# Service to create databases for
 enabled_services: &enabled_services
   - keystone
   - glance
   - nova
   - neutron
   - cinder
+  - heat
+
+galera::status::status_password: clustercheck
+openstacklib::loadbalance::haproxy::vip_secret: vip_password
+cinder_db_password: cinder_pass
+glance_db_password: glance_pass
+keystone_db_password: key_pass
+nova_db_password: nova_pass
+network_db_password: quantum_pass
+database_root_password: mysql_pass
+cinder_service_password: cinder_pass
+glance_service_password: glance_pass
+nova_service_password: nova_pass
+ceilometer_service_password: ceilometer_pass
+admin_password: Cisco123
+admin_token: keystone_admin_token
+network_service_password: quantum_pass
+rpc_password: openstack_rabbit_password
+metadata_shared_secret: metadata_shared_secret
+horizon_secret_key: horizon_secret_key
+ceilometer_metering_secret: ceilometer_metering_secret
+ceilometer_db_password: ceilometer
+heat_db_password: heat
+eat_service_password: heat_pass
+heat::engine::auth_encryption_key: 'notgood but just long enough i think'
 
 # Openstack version to install
 openstack_release: icehouse
-openstacklib::repo::uca::release: icehouse
-openstacklib::repo::rdo::release: icehouse
-openstacklib::compat::release: icehouse
 
 #########################################
 # Anchor mappings for non-string elements
@@ -165,6 +223,7 @@ openstacklib::compat::release: icehouse
 neutron::rabbit_hosts: *cluster_names
 nova::rabbit_hosts: *cluster_names
 cinder::rabbit_hosts: *cluster_names
+heat::rabbit_hosts: *cluster_names
 rabbitmq::cluster_nodes: *cluster_names
 openstacklib::loadbalance::haproxy::cluster_names: *cluster_names
 openstacklib::loadbalance::haproxy::ceilometer::cluster_names: *cluster_names
@@ -190,7 +249,7 @@ openstacklib::loadbalance::haproxy::nova::cluster_addresses: *control_servers_pu
 openstacklib::loadbalance::haproxy::mysql::cluster_addresses: *control_servers_private
 openstacklib::loadbalance::haproxy::rabbitmq::cluster_addresses: *control_servers_private
 openstacklib::loadbalance::haproxy::keystone::cluster_addresses: *control_servers_private
+nova::memcached_servers: *control_servers_private
 galera::galera_servers: *control_servers_private
 
 openstacklib::openstack::databases::enabled_services: *enabled_services
-openstacklib::openstack::endpoints::enabled_services: *enabled_services

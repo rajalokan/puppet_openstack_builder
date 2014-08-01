@@ -354,7 +354,7 @@ if [ ! -d $dest/stacktira/contrib/aptira/site ] ; then
     fi
 fi
 
-if ! $loose_facts; then
+if [ ! $loose_facts ]; then
     if [ ! -f '/etc/facter/facts.d/ipaddress.yaml' ] ; then
         facter | grep ipaddress_ > /etc/facter/facts.d/ipaddress.yaml
         sed -i 's/\ =>/:/' /etc/facter/facts.d/ipaddress.yaml

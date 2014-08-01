@@ -21,9 +21,6 @@
   - "network_type/%{network_type}"
   - "network_plugin/%{network_plugin}"
   - "password_management/%{password_management}"
-  - "contrib/networking/%{networking}"
-  - "contrib/storage/%{storage}"
-  - "contrib/monitoring/%{monitoring}"
   - "scenario/%{scenario}"
   - "scenario/%{scenario}/%{role}"
   - common

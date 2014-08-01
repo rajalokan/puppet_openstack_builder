@@ -23,7 +23,6 @@ $compute_type = hiera('compute_type', "")
 node default {
   notice("my scenario is ${scenario}")
   notice("my role is ${role}")
-  # Should be defined in scenario/[name_of_scenario]/[name_of_role].yaml
   $node_class_groups = hiera('class_groups', undef)
   notice("class groups: ${node_class_groups}")
   if $node_class_groups {
@@ -33,41 +32,19 @@ node default {
   $node_classes = hiera('classes', undef)
   if $node_classes {
     include $node_classes
-    notify { " Including node classes : ${node_classes}": }
-  }
-
-  # get a list of contribs to include.
-  $stg = hiera("${role}_storage", [])
-  notice("storage includes ${stg}")
-  if (size($stg) > 0) {
-    contrib_group { $stg: }
-  }
-
-  # get a list of contribs to include.
-  $networking = hiera("${role}_networking", [])
-  notice("networking includes ${networking}")
-  if (size($networking) > 0) {
-    contrib_group { $networking: }
-  }
-
-  # get a list of contribs to include.
-  $monitoring = hiera('${role}_monitoring', [])
-  notice("monitoring includes ${monitoring}")
-  if (size($monitoring) > 0) {
-    contrib_group { $monitoring: }
+    $s = join($node_classes, ' ')
+    notice("Including node classes : ${s}")
   }
 }
 
 define class_group {
   include hiera($name)
-  notice($name)
-  $x = hiera($name)
+  $x = join(hiera($name), ' ')
   notice( "including ${x}" )
 }
 
 define contrib_group {
   include hiera("${name}_classes")
-  notice($name)
   $x = hiera("${name}_classes")
   notice( "including ${x}" )
 }

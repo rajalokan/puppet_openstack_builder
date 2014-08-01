@@ -29,6 +29,18 @@ nodes:
     vagrant_name: compute2
     memory:       2512
     ip_number:    22
+  converged1:
+    vagrant_name: converged1
+    memory:       4000
+    ip_number:    10
+  converged2:
+    vagrant_name: converged2 
+    memory:       4000
+    ip_number:    11
+  converged3:
+    vagrant_name: converged3
+    memory:       4000
+    ip_number:    12
   regcon1:
     vagrant_name: regcon1
     environment:  regcon

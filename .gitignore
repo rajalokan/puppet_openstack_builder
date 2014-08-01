@@ -6,3 +6,6 @@ module/*
 data/hiera_data/jenkins.yaml
 data/global_hiera_params/jenkins.yaml
 *.pyc
+contrib/aptira/gemcache
+contrib/aptira/packages
+contrib/aptira/site

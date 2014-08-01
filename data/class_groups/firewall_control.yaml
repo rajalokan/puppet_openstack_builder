@@ -13,4 +13,3 @@ classes:
   - openstacklib::firewall::rabbitmq
   - openstacklib::firewall::dashboard
   - openstacklib::firewall::keepalived
-  - galera::firewall

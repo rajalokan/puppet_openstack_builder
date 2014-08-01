@@ -2,6 +2,7 @@ cluster_names:
   - quantum::rabbit_hosts
   - neutron::rabbit_hosts
   - nova::rabbit_hosts
+  - heat::rabbit_hosts
   - cinder::rabbit_hosts
   - rabbitmq::cluster_nodes
   - openstacklib::loadbalance::haproxy::cluster_names
@@ -99,9 +100,9 @@ private_bind_ip:
   - rabbitmq::node_ip_address
   - keystone::admin_bind_host
   - keystone::public_bind_host
+  - nova::compute::vncserver_proxyclient_address
 
 public_vip:
-  - glance::api::registry_host
   - openstacklib::loadbalance::haproxy::cluster_public_vip
   - openstacklib::loadbalance::haproxy::ceilometer::vip
   - openstacklib::loadbalance::haproxy::cinder::vip
@@ -122,6 +123,7 @@ ssl_bind_options:
   - openstacklib::loadbalance::haproxy::neutron::bind_options
 
 private_vip:
+  - glance::api::registry_host
   - openstacklib::loadbalance::haproxy::cluster_private_vip
   - openstacklib::loadbalance::haproxy::mysql::vip
   - openstacklib::loadbalance::haproxy::rabbitmq::vip
@@ -189,10 +191,13 @@ private_vip:
   - swift::keystone::auth::admin_address
   - ceilometer::keystone::auth::admin_address
   - openstacklib::openstack::auth_file::controller_node
+  - galera::status::status_host
 
 openstack_release:
   - openstacklib::compat::nova::openstack_release
   - openstacklib::compat::keystone::openstack_release
+  - openstacklib::repo::uca::release
+  - openstacklib::repo::rdo::release
 
 "%{controller_internal_protocol}://%{controller_internal_address}:8774/v2":
   - neutron::server::notifications::nova_url
@@ -223,3 +228,44 @@ ssl_bind_options:
 
 haproxy_cert_path:
   - openstacklib::loadbalance::haproxy::dashboard::cert_path
+
+proxy_host:
+  - openstacklib::repo::apt_proxy_host
+
+proxy_port:
+  - openstacklib::repo::apt_proxy_port
+
+"http://%{proxy_host}:%{proxy_port}":
+  - openstacklib::repo::yum_http_proxy
+
+control_master_fqdn:
+  - openstacklib::loadbalance::haproxy::cluster_master
+  - galera::galera_master
+
+control_master_name:
+  - openstacklib::loadbalance::haproxy::mysql::master_name
+
+control_master_address:
+  - openstacklib::loadbalance::haproxy::mysql::master_address
+
+deploy_bind_if:
+  - openstacklib::hosts::mgmt_ip
+
+public_bind_if:
+  - openstacklib::loadbalance::haproxy::public_iface
+
+private_bind_if:
+  - openstacklib::loadbalance::haproxy::private_iface
+  - openstacklib::firewall::compute::interface
+
+domain_name:
+  - openstacklib::hosts::domain
+
+build_server_name:
+  - openstacklib::hosts::build_server_name
+
+build_server_ip:
+  - openstacklib::hosts::build_server_ip
+
+allowed_hosts:
+  - galera::status::status_allow

@@ -1,9 +1,11 @@
 git_protocol = ENV['git_protocol'] || 'https'
 reposource   = ENV['reposource']   || 'downstream'
+release   = ENV['release']         || 'icehouse'
+
 git_protocol = 'https'
 if reposource == 'downstream'
   author = 'aptira'
-  ref = 'stacktira'
+  ref = release
 else
   ref = 'master'
 end
