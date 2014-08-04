@@ -3,7 +3,6 @@ classes:
 # class definition if used as backend
 #  - mongodb
   - ceilometer
-  - ceilometer::keystone::auth
   - ceilometer::db
   - ceilometer::collector
   - ceilometer::agent::auth

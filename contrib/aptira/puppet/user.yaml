@@ -151,6 +151,7 @@ openstacklib::openstack::regions::regions_hash:
       - heat
       - nova
       - neutron
+      - ceilometer
       - cinder
       - glance
       - keystone
@@ -184,6 +185,7 @@ openstacklib::repo::yum_base_mirror: 'http://centos.mirror.uber.com.au'
 enabled_services: &enabled_services
   - keystone
   - glance
+  - ceilometer
   - nova
   - neutron
   - cinder
@@ -221,6 +223,7 @@ openstack_release: icehouse
 #########################################
 
 neutron::rabbit_hosts: *cluster_names
+ceilometer::rabbit_hosts: *cluster_names
 nova::rabbit_hosts: *cluster_names
 cinder::rabbit_hosts: *cluster_names
 heat::rabbit_hosts: *cluster_names

@@ -13,5 +13,5 @@ network_type: per-tenant-router
 # supports gre or vlan
 tenant_network_type: gre
 password_management: individual
-
+ceilometer_db_type: mysql
 install_tempest: false

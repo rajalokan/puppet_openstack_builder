@@ -138,3 +138,6 @@ neutron::api_workers: 4
 # There is an override for this in user.common which will
 # kill any mappings
 nova::compute::vncserver_proxyclient_address: "%{hiera('private_bind_ip')}"
+
+# Singleton for ceilometer central agent
+openstacklib::openstack::singleton::service_title: 'ceilometer-agent-central'

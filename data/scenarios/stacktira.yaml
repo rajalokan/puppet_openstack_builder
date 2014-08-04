@@ -19,6 +19,7 @@ roles:
       - mysql::bindings
       - "nova::%{rpc_type}"
       - openstacklib::openstack::databases
+      - openstacklib::openstack::singleton
       - openstacklib::openstack::regions
       - openstacklib::openstack::provider
       - openstacklib::openstack::netns
@@ -35,6 +36,7 @@ roles:
       - network_controller_ml2
       - glance_all
       - cinder_controller
+      - ceilometer_controller
       - nova_controller
       - horizon
       - heat_all
@@ -47,6 +49,7 @@ roles:
       - mysql::bindings
       - "nova::%{rpc_type}"
       - openstacklib::openstack::databases
+      - openstacklib::openstack::singleton
       - openstacklib::openstack::regions
       - openstacklib::openstack::provider
       - openstacklib::openstack::netns

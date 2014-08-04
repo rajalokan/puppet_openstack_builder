@@ -81,6 +81,7 @@ private_control_firewall_source:
 
 public_bind_ip:
   - cinder::api::bind_host
+  - ceilometer::api::host
   - glance::api::bind_host
   - glance::registry::bind_host
   - heat::api_cfn::bind_host
@@ -241,6 +242,7 @@ proxy_port:
 control_master_fqdn:
   - openstacklib::loadbalance::haproxy::cluster_master
   - galera::galera_master
+  - openstacklib::openstack::singleton::cluster_master
 
 control_master_name:
   - openstacklib::loadbalance::haproxy::mysql::master_name
@@ -269,3 +271,12 @@ build_server_ip:
 
 allowed_hosts:
   - galera::status::status_allow
+
+"%{controller_internal_protocol}://%{controller_internal_address}:5000/":
+  - keystone::public_endpoint
+
+"%{controller_admin_protocol}://%{controller_admin_address}:35357/":
+  - keystone::admin_endpoint
+
+"%{controller_admin_protocol}://%{controller_admin_address}:35357/v2.0":
+  - keystone::validate_auth_url

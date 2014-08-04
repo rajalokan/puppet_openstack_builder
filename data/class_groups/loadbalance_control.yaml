@@ -3,6 +3,7 @@ classes:
   - openstacklib::loadbalance::haproxy::mysql
   - openstacklib::loadbalance::haproxy::nova
   - openstacklib::loadbalance::haproxy::keystone
+  - openstacklib::loadbalance::haproxy::ceilometer
   - openstacklib::loadbalance::haproxy::glance
   - openstacklib::loadbalance::haproxy::heat
   - openstacklib::loadbalance::haproxy::neutron
