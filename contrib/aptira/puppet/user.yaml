@@ -59,6 +59,12 @@ external_interface: eth2
 #neutron::plugins::ovs::network_vlan_ranges: default
 #network_type: provider-router
 
+# If you are not using provider networks, and your public interface
+# is used for both data (l3 agent) and API services, we need to
+# put our HA features on the external bridge, rather than the external
+# interface, as the interface is plugged into the bridge by OVS.
+openstacklib::loadbalance::haproxy::public_iface: br-ex
+
 # Gre tunnel bind address for each node
 internal_ip: "%{ipaddress_eth3}"
 
