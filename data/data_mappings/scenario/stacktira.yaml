@@ -208,6 +208,7 @@ openstack_release:
 
 controller_public_protocol:
   - openstacklib::openstack::regions::public_protocol
+  - nova::compute::vncproxy_protocol
 
 controller_internal_protocol:
   - openstacklib::openstack::regions::internal_protocol
