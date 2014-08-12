@@ -69,9 +69,6 @@ openstack_release: icehouse
 # that supports SSL termination
 openstacklib::loadbalance::haproxy::package_override: 'http://stacktira.aptira.com/files/packages/haproxy-1.5.2-1.x86_64.rpm'
 
-# Allow internal comms on compute node
-openstacklib::firewall::compute::interface: eth3
-
 # Store reports in puppetdb
 puppet::master::reports: 'store,puppetdb'
 
