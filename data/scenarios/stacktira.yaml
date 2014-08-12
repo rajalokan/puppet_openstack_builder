@@ -68,6 +68,8 @@ roles:
       - nova_compute_ml2
       - glance_all
       - cinder_controller
+      - ceilometer_controller
+      - ceilometer_compute
       - nova_controller
       - horizon
       - heat_all
