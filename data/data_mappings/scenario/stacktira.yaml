@@ -273,7 +273,7 @@ build_server_ip:
 allowed_hosts:
   - galera::status::status_allow
 
-"%{controller_internal_protocol}://%{controller_internal_address}:5000/":
+"%{controller_public_protocol}://%{controller_public_address}:5000/":
   - keystone::public_endpoint
 
 "%{controller_admin_protocol}://%{controller_admin_address}:35357/":
