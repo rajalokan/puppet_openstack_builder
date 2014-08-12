@@ -6,7 +6,7 @@
 
 proxy="${proxy:-}"
 desired_ruby="${desired_ruby:-2.0.0p353}"
-desired_puppet="${desired_puppet:-3.4.3}"
+desired_puppet="${desired_puppet:-3.6.2}"
 network="${network:-eth1}"
 dest="${destination:-$HOME}"
 environment="${environment:-}"
@@ -150,7 +150,9 @@ if [ "${ruby_version}" != "${desired_ruby}" ] ; then
         else
             echo 'downloading ruby 2.0.0 rpm'
             # wget_rpm_from_somewhere
+            wget http://stacktira.aptira.com/files/packages/ruby-2.0.0p353-1.el6.x86_64.rpm
             yum localinstall ruby-2.0.0p353-1.el6.x86_64.rpm -y -q
+            rm ruby-2.0.0p353-1.el6.x86_64.rpm
         fi
 
     elif [ -f /etc/debian_version ] ; then
