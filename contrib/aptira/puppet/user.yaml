@@ -233,6 +233,7 @@ ceilometer::rabbit_hosts: *cluster_names
 nova::rabbit_hosts: *cluster_names
 cinder::rabbit_hosts: *cluster_names
 heat::rabbit_hosts: *cluster_names
+glance::notify::rabbitmq::rabbit_hosts: *cluster_names
 rabbitmq::cluster_nodes: *cluster_names
 openstacklib::loadbalance::haproxy::cluster_names: *cluster_names
 openstacklib::loadbalance::haproxy::ceilometer::cluster_names: *cluster_names
