@@ -179,10 +179,10 @@ public_control_firewall_source: '10.2.3.0/24'
 private_control_firewall_source: '10.3.3.0/24'
 
 # Mirror to use for epel
-openstacklib::repo::yum_epel_mirror: 'http://fedora.mirror.uber.com.au/epel'
+yum_epel_mirror: 'http://fedora.mirror.uber.com.au/epel'
 
 # Mirror to use for base
-openstacklib::repo::yum_base_mirror: 'http://centos.mirror.uber.com.au'
+yum_base_mirror: 'http://centos.mirror.uber.com.au'
 
 # Service to create databases for
 enabled_services: &enabled_services

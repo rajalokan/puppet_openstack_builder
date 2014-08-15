@@ -67,7 +67,7 @@ openstack_release: icehouse
 
 # RedHat doesn't package a very recent version of HAProxy
 # that supports SSL termination
-openstacklib::loadbalance::haproxy::package_override: 'http://stacktira.aptira.com/files/packages/haproxy-1.5.2-1.x86_64.rpm'
+#openstacklib::loadbalance::haproxy::package_override: 'http://stacktira.aptira.com/files/packages/haproxy-1.5.2-1.x86_64.rpm'
 
 # Store reports in puppetdb
 puppet::master::reports: 'store,puppetdb'
@@ -138,3 +138,55 @@ nova::compute::vncserver_proxyclient_address: "%{hiera('private_bind_ip')}"
 
 # Singleton for ceilometer central agent
 openstacklib::openstack::singleton::service_title: 'ceilometer-agent-central'
+
+# If using openstack_extras, manage the galera repo through that
+# so we can set the proxy
+galera::configure_repo: false
+
+# Set up repositories using openstack_extras
+openstack_extras::repo::redhat::redhat::repo_hash:
+  'CentOS-Base':
+    'descr': 'CentOS-$releasever - Base'
+    'baseurl': "%{hiera('yum_base_mirror')}/$releasever/os/$basearch/"
+  'CentOS-Updates':
+    'descr': 'CentOS-$releasever - Updates'
+    'baseurl': "%{hiera('yum_base_mirror')}/$releasever/updates/$basearch/"
+  'CentOS-Extras':
+    'descr': 'CentOS-$releasever - Extras'
+    'baseurl': "%{hiera('yum_base_mirror')}/$releasever/extras/$basearch/"
+  'epel':
+    'descr': 'Extra Packages for Enterprise Linux 6 - $basearch'
+    'baseurl': "%{hiera('yum_epel_mirror')}/$releasever/$basearch/"
+    'gpgkey': 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6'
+    'failovermethod': 'priority'
+  'mariadb':
+    'descr': 'MariaDB Yum Repo'
+    'baseurl': 'http://yum.mariadb.org/5.5.35-upd/centos6-amd64'
+    'gpgkey': 'https://yum.mariadb.org/RPM-GPG-KEY-MariaDB'
+  'aptira':
+    'descr': 'Aptira Yum Repo'
+    'baseurl': 'http://stacktira.aptira.com/repo/yum'
+    'gpgcheck' : 0
+    'priority' : 90
+  'elruby':
+    'descr': 'elruby replacement 2.0.0'
+    'baseurl': 'http://elruby.websages.com/replacement/2.0.0/$releasever/$basearch/'
+    'gpgcheck' : 0
+
+# Additional defaults to add to repo resources
+openstack_extras::repo::redhat::redhat::repo_defaults:
+  'proxy': "http://%{hiera('proxy_host')}:%{hiera('proxy_port')}"
+
+# GPGkeys to manage
+openstack_extras::repo::redhat::redhat::gpgkey_hash:
+  '/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6':
+    'source': 'puppet:///modules/openstack_extras/RPM-GPG-KEY-EPEL-6'
+
+# Remove repos that are not managed by puppet
+openstack_extras::repo::redhat::redhat::purge_unmanaged: true
+
+# Ensure all packages require all yumrepos
+openstack_extras::repo::redhat::redhat::package_require: true
+
+# Manage epel ourselves
+openstack_extras::repo::redhat::redhat::manage_epel: false

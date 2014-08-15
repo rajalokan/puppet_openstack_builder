@@ -21,6 +21,7 @@ neutron
 nova
 openstack
 openstacklib
+openstack_extras
 postgresql
 puppet
 puppetdb
