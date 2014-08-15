@@ -92,9 +92,6 @@ public_vip: 10.2.3.5
 # The private VIP, where internal services are exposed to other services.
 private_vip: 10.3.3.5
 
-# List of IP addresses for controllers on the public network
-control_servers_public: &control_servers_public  [ '10.2.3.10', '10.2.3.11', '10.2.3.12']
-
 # List of IP addresses for controllers on the private network
 control_servers_private: &control_servers_private  [ '10.3.3.10', '10.3.3.11', '10.3.3.12']
 
@@ -247,14 +244,14 @@ openstacklib::loadbalance::haproxy::neutron::cluster_names: *cluster_names
 openstacklib::loadbalance::haproxy::nova::cluster_names: *cluster_names
 openstacklib::loadbalance::haproxy::rabbitmq::cluster_names: *cluster_names
 
-openstacklib::loadbalance::haproxy::ceilometer::cluster_addresses: *control_servers_public
-openstacklib::loadbalance::haproxy::cinder::cluster_addresses: *control_servers_public
-openstacklib::loadbalance::haproxy::dashboard::cluster_addresses: *control_servers_public
-openstacklib::loadbalance::haproxy::glance::cluster_addresses: *control_servers_public
-openstacklib::loadbalance::haproxy::heat::cluster_addresses: *control_servers_public
-openstacklib::loadbalance::haproxy::keystone::cluster_addresses: *control_servers_public
-openstacklib::loadbalance::haproxy::neutron::cluster_addresses: *control_servers_public
-openstacklib::loadbalance::haproxy::nova::cluster_addresses: *control_servers_public
+openstacklib::loadbalance::haproxy::ceilometer::cluster_addresses: *control_servers_private
+openstacklib::loadbalance::haproxy::cinder::cluster_addresses: *control_servers_private
+openstacklib::loadbalance::haproxy::dashboard::cluster_addresses: *control_servers_private
+openstacklib::loadbalance::haproxy::glance::cluster_addresses: *control_servers_private
+openstacklib::loadbalance::haproxy::heat::cluster_addresses: *control_servers_private
+openstacklib::loadbalance::haproxy::keystone::cluster_addresses: *control_servers_private
+openstacklib::loadbalance::haproxy::neutron::cluster_addresses: *control_servers_private
+openstacklib::loadbalance::haproxy::nova::cluster_addresses: *control_servers_private
 
 openstacklib::loadbalance::haproxy::mysql::cluster_addresses: *control_servers_private
 openstacklib::loadbalance::haproxy::rabbitmq::cluster_addresses: *control_servers_private

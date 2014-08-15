@@ -38,9 +38,6 @@ control_servers_private:
   - openstacklib::loadbalance::haproxy::mysql::cluster_addresses
   - openstacklib::loadbalance::haproxy::rabbitmq::cluster_addresses
   - openstacklib::loadbalance::haproxy::keystone::cluster_addresses
-
-control_servers_public:
-  - openstacklib::loadbalance::haproxy::cluster_addresses
   - openstacklib::loadbalance::haproxy::ceilometer::cluster_addresses
   - openstacklib::loadbalance::haproxy::cinder::cluster_addresses
   - openstacklib::loadbalance::haproxy::dashboard::cluster_addresses
@@ -79,7 +76,13 @@ private_control_firewall_source:
   - openstacklib::firewall::nova::internal_source
   - openstacklib::firewall::neutron::internal_source
 
-public_bind_ip:
+private_bind_ip:
+  - galera::bind_address
+  - galera::local_ip
+  - rabbitmq::node_ip_address
+  - keystone::admin_bind_host
+  - keystone::public_bind_host
+  - nova::compute::vncserver_proxyclient_address
   - cinder::api::bind_host
   - ceilometer::api::host
   - glance::api::bind_host
@@ -94,14 +97,6 @@ public_bind_ip:
   - nova::vncproxy::host
   - horizon::wsgi::apache::bind_address
   - horizon::bind_address
-
-private_bind_ip:
-  - galera::bind_address
-  - galera::local_ip
-  - rabbitmq::node_ip_address
-  - keystone::admin_bind_host
-  - keystone::public_bind_host
-  - nova::compute::vncserver_proxyclient_address
 
 public_vip:
   - openstacklib::loadbalance::haproxy::cluster_public_vip
