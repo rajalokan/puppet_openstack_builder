@@ -148,6 +148,12 @@ if reposource != 'downstream'
 end
 mod 'michaeltchapman/openstacklib', :git => "#{git_protocol}://github.com/#{author}/puppet-openstacklib.git", :ref => ref
 
+# openstack_extras
+if reposource != 'downstream'
+  author = 'stackforge'
+end
+mod 'stackforge/openstack_extras', :git => "#{git_protocol}://github.com/#{author}/puppet-openstack_extras.git", :ref => ref
+
 # postgresql
 if reposource != 'downstream'
   author = 'puppetlabs'

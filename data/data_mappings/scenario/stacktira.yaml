@@ -192,8 +192,6 @@ private_vip:
 openstack_release:
   - openstacklib::compat::nova::openstack_release
   - openstacklib::compat::keystone::openstack_release
-  - openstacklib::repo::uca::release
-  - openstacklib::repo::rdo::release
 
 "%{controller_internal_protocol}://%{controller_internal_address}:8774/v2":
   - neutron::server::notifications::nova_url
@@ -225,15 +223,6 @@ ssl_bind_options:
 
 haproxy_cert_path:
   - openstacklib::loadbalance::haproxy::dashboard::cert_path
-
-proxy_host:
-  - openstacklib::repo::apt_proxy_host
-
-proxy_port:
-  - openstacklib::repo::apt_proxy_port
-
-"http://%{proxy_host}:%{proxy_port}":
-  - openstacklib::repo::yum_http_proxy
 
 control_master_fqdn:
   - openstacklib::loadbalance::haproxy::cluster_master
