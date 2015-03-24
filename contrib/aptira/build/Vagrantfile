@@ -206,7 +206,7 @@ Vagrant.configure("2") do |config|
     target.vm.box = "nrel/CentOS-6.5-x86_64"
     setup_networks(target, 150, '10')
     config.vm.provision :shell do |shell|
-      shell.inline  = '\curl -sSL https://raw.github.com/michaeltchapman/puppet_openstack_builder/stacktira/contrib/aptira/installer/bootstrap.sh | bash'
+      shell.inline = '\curl -sSL https://raw.githubusercontent.com/aptira/puppet_openstack_builder/icehouse/contrib/aptira/installer/bootstrap.sh | bash'
     end
 
     config.vm.provision :shell do |shell|
